@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>lightadmin-parent</artifactId>
+        <artifactId>lightadmin-parent-spring5</artifactId>
         <groupId>org.lightadmin</groupId>
         <version>1.2.0.BUILD-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lightadmin-sandbox</artifactId>
+    <artifactId>lightadmin-sandbox-spring5</artifactId>
     <version>1.2.0.BUILD-SNAPSHOT</version>
     <packaging>war</packaging>
 

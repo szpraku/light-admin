@@ -5,6 +5,7 @@ import org.lightadmin.api.config.management.rmi.GlobalConfigurationManagementSer
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -99,6 +100,8 @@ public class SeleniumConfig {
 
         FirefoxProfile profile = new FirefoxProfile();
         profile.setPreference("focusmanager.testmode", true);
-        return new FirefoxDriver(profile);
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.setProfile(profile);
+        return new FirefoxDriver(firefoxOptions);
     }
 }

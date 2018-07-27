@@ -34,8 +34,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -182,7 +182,7 @@ public class LightAdminSecurityConfiguration {
     @Autowired
     public AuthenticationProvider authenticationProvider(UserDetailsService usersService) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new ShaPasswordEncoder());
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
         provider.setUserDetailsService(usersService);
         provider.afterPropertiesSet();
         return provider;

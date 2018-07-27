@@ -36,12 +36,8 @@ public class DomainAsserts {
 
     public static void assertTableRowCount(final String[][] expectedData, final DataTableComponent dataTable, final WebDriver webDriver, final long timeout) {
         try {
-            new WebDriverWait(webDriver, timeout).until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver input) {
-                    return expectedData.length == dataTable.getRowCount();
-                }
-            });
+            new WebDriverWait(webDriver, timeout).until(webDriver1 -> (ExpectedCondition<Boolean>) input ->
+                expectedData.length == dataTable.getRowCount());
         } catch (TimeoutException e) {
             fail(String.format("Wrong row count for the table. Expected: %d, Actual: %d",
                     expectedData.length, dataTable.getRowCount()));
@@ -74,12 +70,8 @@ public class DomainAsserts {
 
     public static void assertImagePreviewIsDisplayed(String viewName, final WebElement webElement, final ExtendedWebDriver webDriver, final long timeout) {
         try {
-            new WebDriverWait(webDriver, timeout).until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver input) {
-                    return webDriver.isElementPresent(webElement.findElement(By.xpath("//img[@name='picture']")));
-                }
-            });
+            new WebDriverWait(webDriver, timeout).until(webDriver1 -> (ExpectedCondition<Boolean>) input ->
+                webDriver.isElementPresent(webElement.findElement(By.xpath("//img[@name='picture']"))));
         } catch (TimeoutException e) {
             fail("Image preview is not displayed on " + viewName);
         }

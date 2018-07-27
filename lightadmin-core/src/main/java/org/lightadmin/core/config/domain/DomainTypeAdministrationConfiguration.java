@@ -45,7 +45,8 @@ public class DomainTypeAdministrationConfiguration implements DomainTypeBasicCon
 
         Class<?> domainType = configurationUnits.getDomainType();
 
-        this.repository = (DynamicJpaRepository<?, ? extends Serializable>) repositories.getRepositoryFor(domainType);
+        this.repository = (DynamicJpaRepository<?, ? extends Serializable>) repositories
+            .getRepositoryFor(domainType).get();
         this.persistentEntity = repositories.getPersistentEntity(domainType);
         this.configurationUnits = configurationUnits;
     }

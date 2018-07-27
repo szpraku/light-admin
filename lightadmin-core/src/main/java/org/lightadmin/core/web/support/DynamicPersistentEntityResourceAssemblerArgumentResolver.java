@@ -41,8 +41,6 @@ public class DynamicPersistentEntityResourceAssemblerArgumentResolver implements
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        PersistentEntityResourceAssembler persistentEntityResourceAssembler = (PersistentEntityResourceAssembler) delegate.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
-
-        return new DynamicPersistentEntityResourceAssembler(persistentEntityResourceAssembler);
+        return delegate.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
     }
 }

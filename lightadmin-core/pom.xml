@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.lightadmin</groupId>
-    <artifactId>lightadmin</artifactId>
+    <artifactId>lightadmin-spring5</artifactId>
     <packaging>jar</packaging>
 
     <version>1.2.0.BUILD-SNAPSHOT</version>
@@ -92,10 +92,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-        <spring.platform.version>1.1.2.RELEASE</spring.platform.version>
+        <spring.platform.version>Cairo-SR2</spring.platform.version>
 
         <commons-collections4.version>4.0</commons-collections4.version>
         <imgscalr-lib.version>4.2</imgscalr-lib.version>
@@ -141,6 +141,7 @@
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
+            <version>3.22.0-GA</version>
         </dependency>
 
         <dependency>

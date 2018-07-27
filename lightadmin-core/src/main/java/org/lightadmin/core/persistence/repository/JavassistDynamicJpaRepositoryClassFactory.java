@@ -47,7 +47,7 @@ public class JavassistDynamicJpaRepositoryClassFactory implements DynamicReposit
         try {
             ClassPool classPool = ClassPool.getDefault();
 
-            CtClass baseInterface = classPool.getOrNull(DynamicJpaRepository.class.getName());
+            CtClass baseInterface = classPool.get(DynamicJpaRepository.class.getName());
             if (baseInterface == null) {
                 baseInterface = classPool.makeInterface(DynamicJpaRepository.class.getName());
             }
@@ -56,7 +56,8 @@ public class JavassistDynamicJpaRepositoryClassFactory implements DynamicReposit
 
             ClassType baseInterfaceType = classType(DynamicJpaRepository.class, toArray(typeArgument(domainType), typeArgument(idType)));
 
-            dynamicRepositoryInterface.setGenericSignature(classSignature(baseInterfaceType).encode());
+            dynamicRepositoryInterface.setGenericSignature(classSignature(baseInterfaceType)
+                .encode());
 
             return dynamicRepositoryInterface.toClass(classLoader, JavassistDynamicJpaRepositoryClassFactory.class.getProtectionDomain());
         } catch (Exception e) {

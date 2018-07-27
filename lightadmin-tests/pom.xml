@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>org.lightadmin</groupId>
-        <artifactId>lightadmin-parent</artifactId>
+        <artifactId>lightadmin-parent-spring5</artifactId>
         <version>1.2.0.BUILD-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lightadmin-tests</artifactId>
+    <artifactId>lightadmin-tests-spring5</artifactId>
     <version>1.2.0.BUILD-SNAPSHOT</version>
 
     <name>LightAdmin Selenium</name>

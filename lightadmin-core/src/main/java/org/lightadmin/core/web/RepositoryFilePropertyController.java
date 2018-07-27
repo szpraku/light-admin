@@ -23,7 +23,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
-import org.springframework.data.rest.core.invoke.RepositoryInvoker;
+import org.springframework.data.repository.support.RepositoryInvoker;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.data.rest.webmvc.RootResourceInformation;
@@ -69,11 +69,7 @@ public class RepositoryFilePropertyController {
         PersistentEntity<?, ?> persistentEntity = repoRequest.getPersistentEntity();
         RepositoryInvoker invoker = repoRequest.getInvoker();
 
-        Object domainObj = invoker.invokeFindOne(id);
-
-        if (null == domainObj) {
-            throw new ResourceNotFoundException();
-        }
+        Object domainObj = invoker.invokeFindById(id).orElseThrow(ResourceNotFoundException::new);
 
         PersistentProperty<?> prop = persistentEntity.getPersistentProperty(property);
         if (null == prop) {
@@ -90,11 +86,7 @@ public class RepositoryFilePropertyController {
         PersistentEntity<?, ?> persistentEntity = repoRequest.getPersistentEntity();
         RepositoryInvoker invoker = repoRequest.getInvoker();
 
-        Object domainObj = invoker.invokeFindOne(id);
-
-        if (null == domainObj) {
-            throw new ResourceNotFoundException();
-        }
+        Object domainObj = invoker.invokeFindById(id).orElseThrow(ResourceNotFoundException::new);
 
         PersistentProperty<?> prop = persistentEntity.getPersistentProperty(property);
         if (null == prop) {
@@ -113,11 +105,7 @@ public class RepositoryFilePropertyController {
         PersistentEntity<?, ?> persistentEntity = repoRequest.getPersistentEntity();
         RepositoryInvoker invoker = repoRequest.getInvoker();
 
-        Object domainObj = invoker.invokeFindOne(id);
-
-        if (null == domainObj) {
-            throw new ResourceNotFoundException();
-        }
+        Object domainObj = invoker.invokeFindById(id).orElseThrow(ResourceNotFoundException::new);
 
         PersistentProperty<?> prop = persistentEntity.getPersistentProperty(property);
         if (null == prop) {

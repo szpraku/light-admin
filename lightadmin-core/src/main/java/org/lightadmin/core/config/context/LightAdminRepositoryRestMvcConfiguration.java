@@ -16,6 +16,7 @@
 package org.lightadmin.core.config.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.lightadmin.core.config.LightAdminConfiguration;
 import org.lightadmin.core.config.bootstrap.RepositoriesFactoryBean;
 import org.lightadmin.core.config.domain.GlobalAdministrationConfiguration;
@@ -25,17 +26,25 @@ import org.lightadmin.core.persistence.support.DynamicDomainObjectMerger;
 import org.lightadmin.core.storage.FileResourceStorage;
 import org.lightadmin.core.web.json.DomainTypeToJsonMetadataConverter;
 import org.lightadmin.core.web.json.LightAdminJacksonModule;
-import org.lightadmin.core.web.support.*;
+import org.lightadmin.core.web.support.ConfigurationHandlerMethodArgumentResolver;
+import org.lightadmin.core.web.support.DomainEntityLinks;
+import org.lightadmin.core.web.support.DynamicPersistentEntityResourceAssemblerArgumentResolver;
+import org.lightadmin.core.web.support.DynamicPersistentEntityResourceProcessor;
+import org.lightadmin.core.web.support.DynamicRepositoryEntityLinks;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.mapping.context.PersistentEntities;
 import org.springframework.data.repository.support.Repositories;
+import org.springframework.data.repository.support.RepositoryInvokerFactory;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
-import org.springframework.data.rest.core.invoke.RepositoryInvokerFactory;
 import org.springframework.data.rest.core.support.DomainObjectMerger;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.config.PersistentEntityResourceAssemblerArgumentResolver;
@@ -54,6 +63,9 @@ import static org.springframework.util.ClassUtils.isAssignableValue;
 @ComponentScan(basePackages = {"org.lightadmin.core.web"},
         includeFilters = @ComponentScan.Filter(RepositoryRestController.class), useDefaultFilters = false)
 public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcConfiguration {
+    public LightAdminRepositoryRestMvcConfiguration(ApplicationContext context, ObjectFactory<ConversionService> conversionService) {
+        super(context, conversionService);
+    }
 
     @Autowired
     private ListableBeanFactory beanFactory;
@@ -70,7 +82,9 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
 
     @Bean
     public DynamicPersistentEntityResourceProcessor dynamicPersistentEntityResourceProcessor() {
-        return new DynamicPersistentEntityResourceProcessor(globalAdministrationConfiguration(), fileResourceStorage(), dynamicRepositoryEntityLinks(), domainEntityLinks(), resourceMappings());
+        return new DynamicPersistentEntityResourceProcessor(globalAdministrationConfiguration(),
+            fileResourceStorage(), dynamicRepositoryEntityLinks(), domainEntityLinks(),
+            resourceMappings(), repositoryRestConfiguration());
     }
 
     @Bean
@@ -93,8 +107,8 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
     }
 
     @Bean
-    public RepositoryInvokerFactory repositoryInvokerFactory() {
-        RepositoryInvokerFactory repositoryInvokerFactory = super.repositoryInvokerFactory();
+    public RepositoryInvokerFactory repositoryInvokerFactory(ConversionService conversionService) {
+        RepositoryInvokerFactory repositoryInvokerFactory = super.repositoryInvokerFactory(conversionService);
 
         return new DynamicRepositoryInvokerFactory(repositories(), repositoryInvokerFactory);
     }
@@ -111,12 +125,15 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
     }
 
     @Override
-    protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+    public RepositoryRestConfiguration repositoryRestConfiguration() {
+        RepositoryRestConfiguration config = super.repositoryRestConfiguration();
         config.setDefaultPageSize(10);
-        config.setBaseUri(lightAdminConfiguration().getApplicationRestBaseUrl());
+        config.setBasePath(lightAdminConfiguration().getApplicationBaseUrl());
         config.exposeIdsFor(globalAdministrationConfiguration().getAllDomainTypesAsArray());
         config.setReturnBodyOnCreate(true);
         config.setReturnBodyOnUpdate(true);
+
+        return config;
     }
 
     @Override
@@ -127,9 +144,11 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
     }
 
     @Override
-    protected void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+    public ValidatingRepositoryEventListener validatingRepositoryEventListener(ObjectFactory<PersistentEntities> entities) {
+        ValidatingRepositoryEventListener validatingListener = super.validatingRepositoryEventListener(entities);
         validatingListener.addValidator("beforeCreate", validator());
         validatingListener.addValidator("beforeSave", validator());
+        return validatingListener;
     }
 
     @Override
@@ -139,8 +158,11 @@ public class LightAdminRepositoryRestMvcConfiguration extends RepositoryRestMvcC
     }
 
     @Override
-    protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = super.objectMapper();
         objectMapper.registerModule(new LightAdminJacksonModule(globalAdministrationConfiguration()));
+
+        return objectMapper;
     }
 
     @SuppressWarnings("unchecked")

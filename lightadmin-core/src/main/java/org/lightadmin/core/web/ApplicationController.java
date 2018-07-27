@@ -30,7 +30,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import java.io.Serializable;
 
@@ -64,7 +63,7 @@ public class ApplicationController {
         return new ModelAndView("error-page").addObject("exception", ex);
     }
 
-    @ExceptionHandler(NoSuchRequestHandlingMethodException.class)
+//    @ExceptionHandler(NoSuchRequestHandlingMethodException.class)
     @RequestMapping(value = "/page-not-found", method = RequestMethod.GET)
     public String handlePageNotFound() {
         return "page-not-found";
@@ -156,7 +155,7 @@ public class ApplicationController {
         PersistentEntity persistentEntity = domainTypeConfiguration.getPersistentEntity();
         Serializable id = (Serializable) conversionService.convert(entityId, persistentEntity.getIdProperty().getActualType());
 
-        return repository.findOne(id);
+        return repository.findById(id).get();
     }
 
     private void addDomainTypeConfigurationToModel(String domainTypeName, Model model) {

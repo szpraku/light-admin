@@ -194,7 +194,8 @@ public class RepositoryScopedSearchController {
     }
 
     private Page<?> selectPage(List<Object> items, Pageable pageable) {
-        final List<Object> itemsOnPage = items.subList(pageable.getOffset(), Math.min(items.size(), pageable.getOffset() + pageable.getPageSize()));
+        final List<Object> itemsOnPage = items.subList((int) pageable.getOffset(), (int) Math.min
+            (items.size(), pageable.getOffset() + pageable.getPageSize()));
 
         return new PageImpl(itemsOnPage, pageable, items.size());
     }
